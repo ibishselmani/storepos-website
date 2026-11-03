@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="sq">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:type" content="website">
+<meta property="og:title" content="StorePOS: arka, stoku dhe fitimi i dyqanit tuaj">
+<meta property="og:description" content="Program arke për dyqanet në Kosovë, Shqipëri dhe Maqedoni të Veriut. Provë falas 30 ditë.">
+<meta property="og:image" content="https://ibishselmani.github.io/storepos-website/img/share.jpg">
+<meta property="og:url" content="https://ibishselmani.github.io/storepos-website/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%232f55e4'/%3E%3Cpath d='M5 9.5l1-3.5h12l1 3.5M6 9.5v8.5h12V9.5M10.5 18v-3.5h3V18' fill='none' stroke='white' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>StorePOS për dyqanin tuaj</title>
+<meta name="description" content="StorePOS: program arke dhe stoku për dyqanet në Kosovë, Shqipëri dhe Maqedoninë e Veriut. Shqip, punon pa internet, provë falas 30 ditë.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+/* Layout: one column of bands; the hero shows the real till, then the video, the price list is printed as an 80 mm receipt. */
+:root {
+  --bg: #f3f5fa;
+  --surface: #ffffff;
+  --ink: #141b2d;
+  --muted: #5b6478;
+  --line: #dde2ee;
+  --brand: #2f55e4;
+  --brand-2: #5b3fd9;
+  --go: #12a150;
+  --paper: #fffef8;
+  --paper-ink: #22232a;
+  --band: #141b2d;
+  --band-ink: #eef1fa;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1220; --surface: #171d2f; --ink: #e9edf7; --muted: #9aa3b9; --line: #2a3250;
+    --brand: #6f8cff; --brand-2: #9a85ff; --go: #34c472; --paper: #f4f1e6; --paper-ink: #22232a;
+    --band: #070a14; --band-ink: #e9edf7; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1220; --surface: #171d2f; --ink: #e9edf7; --muted: #9aa3b9; --line: #2a3250;
+  --brand: #6f8cff; --brand-2: #9a85ff; --go: #34c472; --paper: #f4f1e6; --paper-ink: #22232a;
+  --band: #070a14; --band-ink: #e9edf7; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); line-height: 1.1; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.2rem, 5.4vw, 3.9rem); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.7rem, 3.4vw, 2.5rem); font-weight: 800; letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--brand); }
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; border-radius: 6px; }
+.eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); }
+
+/* top bar: stays on top while scrolling */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+section, #kontakt { scroll-margin-top: 80px; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 86%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.top { padding-block: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.logo { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 1.35rem; color: var(--ink); text-decoration: none; }
+.logo i { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--brand), var(--brand-2)); display: grid; place-items: center; }
+.logo svg { width: 20px; height: 20px; stroke: #fff; }
+.top nav { display: flex; gap: 20px; align-items: center; font-weight: 500; }
+.top nav a { color: var(--muted); text-decoration: none; }
+.top nav a:hover { color: var(--ink); }
+.top nav .nav-cta { background: var(--go); color: #fff; padding: 8px 14px; border-radius: 10px; font-weight: 700; white-space: nowrap; }
+.top nav .nav-cta:hover { color: #fff; filter: brightness(1.08); }
+.lang { display: inline-flex; border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; flex: none; }
+.lang button { background: transparent; color: var(--muted); border: 0; padding: 6px 10px; font: 700 0.85rem var(--body); cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+
+/* hero */
+.hero { padding-block: 40px 56px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px; align-items: center; }
+.hero .lead { font-size: 1.2rem; color: var(--muted); margin-top: 18px; max-width: 34ch; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 1rem; }
+.btn svg { width: 18px; height: 18px; }
+.btn.go { background: var(--go); color: #fff; }
+.btn.ghost { border: 1.5px solid var(--line); color: var(--ink); background: var(--surface); }
+.flags { margin-top: 22px; display: flex; gap: 8px 18px; flex-wrap: wrap; color: var(--muted); font-size: 0.95rem; }
+.flags span::before { content: "✓ "; color: var(--go); font-weight: 700; }
+.screen { position: relative; }
+.screen .tag { position: absolute; left: -14px; bottom: 26px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; font-size: 0.9rem; box-shadow: 0 10px 24px -12px rgba(0,0,0,.35); }
+.screen .tag b { display: block; font-family: var(--display); font-size: 1.3rem; }
+
+/* sections */
+section { padding-block: 64px; }
+.head { display: grid; gap: 12px; max-width: 640px; margin-bottom: 36px; }
+.head p { color: var(--muted); font-size: 1.1rem; }
+
+/* video */
+.film { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 48px; align-items: center; }
+.film .head { margin-bottom: 0; }
+.film video { width: 100%; aspect-ratio: 16 / 9; display: block; border-radius: 16px; background: #141b2d; box-shadow: 0 30px 60px -28px rgba(20, 27, 45, 0.55), 0 0 0 1px var(--line); }
+.film .length { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 500; }
+.film .length::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #e5484d; }
+
+.features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 32px; }
+.feature { display: grid; gap: 8px; align-content: start; }
+.feature svg { width: 28px; height: 28px; stroke: var(--brand); }
+.feature p { color: var(--muted); }
+
+/* app window frame around every picture */
+.win { border-radius: 14px; overflow: hidden; background: #1b2338; box-shadow: 0 30px 60px -24px rgba(20, 27, 45, 0.5), 0 0 0 1px var(--line); }
+.win-bar { display: flex; align-items: center; gap: 7px; padding: 9px 14px; background: #1b2338; color: #aab3c9; font-size: 0.8rem; font-weight: 500; }
+.win-bar i { width: 10px; height: 10px; border-radius: 50%; background: #3a4562; flex: none; }
+.win-bar span { margin-left: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.win img { display: block; width: 100%; height: auto; }
+.tour { display: grid; gap: 72px; }
+.stop { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 48px; align-items: center; }
+.stop.flip { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); }
+.stop.flip .win { order: 2; }
+.stop .text { display: grid; gap: 10px; }
+.stop h3 { font-size: 1.6rem; font-weight: 800; }
+.stop p { color: var(--muted); font-size: 1.05rem; }
+
+.types { background: var(--band); color: var(--band-ink); }
+.types .head p { color: color-mix(in srgb, var(--band-ink) 70%, transparent); }
+.types .eyebrow { color: #9fb2ff; }
+.chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.chip { border: 1px solid rgba(255,255,255,.14); border-radius: 14px; padding: 18px 20px; display: grid; gap: 4px; }
+.chip h3 { color: #fff; }
+.chip p { font-size: 0.95rem; color: color-mix(in srgb, var(--band-ink) 72%, transparent); }
+
+/* how it works: a real order of steps */
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; counter-reset: step; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 8px; align-content: start; counter-increment: step; }
+.step::before { content: counter(step); width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); font: 800 1rem var(--display); }
+.step p { color: var(--muted); font-size: 0.97rem; }
+
+/* price list as a receipt */
+.pricing { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+.receipt { background: var(--paper); color: var(--paper-ink); font-family: var(--mono); font-size: 0.92rem; line-height: 1.5; padding: 28px 26px 34px; max-width: 400px; width: 100%; justify-self: center; position: relative; box-shadow: 0 24px 50px -24px rgba(0,0,0,.4);
+  --tooth: radial-gradient(circle at 8px 0, transparent 7px, var(--paper) 7.5px);
+}
+.receipt::after { content: ""; position: absolute; left: 0; right: 0; bottom: -8px; height: 8px; background: var(--tooth); background-size: 16px 8px; }
+.receipt .c { text-align: center; }
+.receipt .big { font-weight: 700; font-size: 1.15rem; letter-spacing: 0.04em; }
+.receipt hr { border: 0; border-top: 1.5px dashed #9a9a9a; margin: 12px 0; }
+.receipt .row { display: flex; justify-content: space-between; gap: 12px; }
+.receipt .row span:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.receipt .sub { color: #666; font-size: 0.82rem; }
+.receipt .total { font-weight: 700; font-size: 1.05rem; }
+.receipt .strike { text-decoration: line-through; color: #888; }
+.pricing ul { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.pricing li { padding-left: 28px; position: relative; }
+.pricing li::before { content: ""; position: absolute; left: 0; top: 0.45em; width: 14px; height: 8px; border-left: 2.5px solid var(--go); border-bottom: 2.5px solid var(--go); transform: rotate(-45deg); }
+
+/* faq */
+.faq { display: grid; gap: 10px; max-width: 780px; }
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
+summary { font-weight: 700; cursor: pointer; }
+details p { margin-top: 10px; color: var(--muted); }
+
+/* contact */
+.contact { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff; border-radius: 22px; padding: 44px clamp(22px, 5vw, 56px); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+.contact p { opacity: .9; margin-top: 12px; font-size: 1.1rem; }
+.lines { display: grid; gap: 12px; }
+.line { background: rgba(255,255,255,.12); border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.line small { display: block; opacity: .75; font-size: 0.8rem; }
+.line b { font-size: 1.1rem; user-select: all; overflow-wrap: anywhere; }
+.line button { background: #fff; color: var(--brand-2); border: 0; border-radius: 8px; padding: 8px 12px; font: 700 0.9rem var(--body); cursor: pointer; }
+footer { padding-block: 32px 48px; color: var(--muted); font-size: 0.9rem; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 960px) {
+  .steps { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+@media (max-width: 860px) {
+  .hero, .pricing, .contact, .film { grid-template-columns: minmax(0, 1fr); }
+  .film { gap: 24px; }
+  .features, .chips { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .stop, .stop.flip { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .stop.flip .win { order: 0; }
+  .top nav a:not(.nav-cta) { display: none; }
+  .screen .tag { position: static; margin-top: 14px; display: inline-block; }
+}
+@media (max-width: 560px) {
+  .features, .chips, .steps { grid-template-columns: minmax(0, 1fr); }
+  section { padding-block: 48px; }
+  .top nav { gap: 10px; }
+  .logo { font-size: 1.2rem; }
+}
+@media (max-width: 440px) {
+  .top nav .nav-cta { display: none; }
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="wrap top">
+    <a class="logo" href="#"><i><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0"/><path d="M10 20v-5h4v5"/></svg></i>StorePOS</a>
+    <nav>
+      <a href="#video" data-en="Video">Videoja</a>
+      <a href="#funksionet" data-en="Features">Funksionet</a>
+      <a href="#cmimet" data-en="Prices">Çmimet</a>
+      <a href="#pyetje" data-en="Questions">Pyetje</a>
+      <span class="lang" role="group" aria-label="Gjuha / Language">
+        <button type="button" id="lang-sq" data-lang="sq" aria-pressed="true">SQ</button>
+        <button type="button" id="lang-en" data-lang="en" aria-pressed="false">EN</button>
+      </span>
+      <a class="nav-cta" href="#kontakt" data-en="Free trial">Provë falas</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="eyebrow" data-en="Till and stock program">Program arke dhe stoku</div>
+      <h1 style="margin-top:12px" data-en="Your shop's till, stock and profit, in one place.">Arka, stoku dhe fitimi i dyqanit tuaj, në një vend.</h1>
+      <p class="lead" data-en="Scan, sell, and at the end of the day know exactly what you earned. Works without internet, no monthly fee required.">Skanoni, shitni, dhe në fund të ditës e dini saktë sa keni fituar. Në shqip, pa internet, pa abonim të detyrueshëm.</p>
+      <div class="cta">
+        <a class="btn go" href="#kontakt" data-en="Try it free for 30 days">Provoni falas 30 ditë</a>
+        <a class="btn ghost" href="#video" data-en='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Watch the video'><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Shikoni videon</a>
+      </div>
+      <div class="flags"><span data-en="Kosovo">Kosovë</span><span data-en="Albania">Shqipëri</span><span data-en="North Macedonia">Maqedoni e Veriut</span><span data-en="€, lek, denar">€, lekë, denarë</span></div>
+    </div>
+    <div class="screen">
+      <div class="win"><div class="win-bar"><i></i><i></i><i></i><span>StorePOS · Market Dardania</span></div>
+      <img src="img/till@2x.jpg" alt="Ekrani i shitjes në StorePOS: pllaka me produkte, shporta dhe butonat Para në dorë dhe Kartelë" data-en-alt="The StorePOS sales screen: product tiles, the cart and the Cash and Card buttons" width="2560" height="1440"></div>
+      <div class="tag" data-en="Sell with one tap<b>Cash · Card · On credit</b>">Shitje me një prekje<b>Para në dorë · Kartelë · Borxh</b></div>
+    </div>
+  </div>
+</div>
+
+<section id="video" style="padding-top:8px">
+  <div class="wrap film">
+    <div class="head">
+      <div class="eyebrow" data-en="See it working">Shikojeni si punon</div>
+      <h2 data-en="StorePOS in a minute and a half">StorePOS në një minutë e gjysmë</h2>
+      <p data-en="A real sale, the products, debts, reports and closing the till, exactly as you will see them in your shop.">Një shitje e vërtetë, produktet, borxhet, raportet dhe mbyllja e arkës, ashtu siç do t'i shihni në dyqanin tuaj.</p>
+      <span class="length" data-en="With sound · 1:37">Me zë · 1:37</span>
+    </div>
+    <video id="film" controls playsinline preload="metadata" poster="img/poster_sq_v2.jpg" data-src-sq="video_sq_v2.mp4" data-src-en="video_en_v2.mp4" data-poster-sq="img/poster_sq_v2.jpg" data-poster-en="img/poster_en_v2.jpg">
+      <source src="video_sq_v2.mp4" type="video/mp4">
+    </video>
+  </div>
+</section>
+
+<section id="funksionet">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow" data-en="What it does">Çfarë bën</div>
+      <h2 data-en="Everything a small shop needs">Gjithçka që i duhet një dyqani të vogël</h2>
+      <p data-en="Made for shops in our region: with the local VAT, customers who pay later, and suppliers who come every week.">I bërë për dyqanet tona: me TVSH-në e vendit, me borxhet e klientëve dhe me furnitorët që vijnë çdo javë.</p>
+    </div>
+    <div class="features">
+      <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M3 5v14M7 5v14M11 5v14M14 5v14M18 5v14M21 5v14"/></svg><h3 data-en="Fast selling">Shitje e shpejtë</h3><p data-en="Scan the barcode or tap the product on screen. Works with touch screens, scales and 80 mm receipt printers.">Skanoni barkodin ose prekni produktin në ekran. Punon me ekran me prekje, peshore dhe printer kuponash 80 mm.</p></div>
+      <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg><h3 data-en="Stock under control">Stoku nën kontroll</h3><p data-en="Goods received with the invoice, stocktaking, warnings for low stock and for products that expire soon.">Mall i pranuar me faturë, inventarizim, paralajmërim për stok të ulët dhe për produktet që skadojnë.</p></div>
+      <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><h3 data-en="Your real profit">Fitimi i vërtetë</h3><p data-en="Profit after goods, rent and expenses. VAT for your accountant, in Excel or PDF.">Fitimi pas mallit, qirasë dhe shpenzimeve. TVSH-ja për kontabilistin, në Excel ose PDF.</p></div>
+      <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6"/><path d="M17 4a4 4 0 010 8M22 21c0-3-1.5-5-4-5.6"/></svg><h3 data-en="Customers and debts">Klientë dhe borxhe</h3><p data-en="Who owes you and how much, payments in parts, bank-transfer invoices, reminders by WhatsApp.">Kush ju ka borxh dhe sa, pagesat me pjesë, faturat me transfer bankar, kujtesa me WhatsApp.</p></div>
+      <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><h3 data-en="Cashiers with permissions">Arkëtarët me leje</h3><p data-en="Each with their own password. Opening and closing the till, the Z report and a log of every action.">Secili me fjalëkalimin e vet. Hapja dhe mbyllja e arkës, raporti Z dhe regjistri i çdo veprimi.</p></div>
+      <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H5.5L4 17.5z"/><path d="M8 9h8M8 12h5"/></svg><h3 data-en="The report on your phone">Raporti në telefon</h3><p data-en="When the till closes, the owner gets the day's summary by email: sales, profit and what is missing.">Kur mbyllet arka, pronari merr përmbledhjen e ditës me email: shitjet, fitimin dhe çka mungon.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="ekranet" style="padding-top:8px">
+  <div class="wrap tour">
+    <div class="head" style="margin-bottom:0">
+      <div class="eyebrow" data-en="What it looks like">Si duket</div>
+      <h2 data-en="The program's screens">Ekranet e programit</h2>
+    </div>
+    <div class="stop">
+      <div class="win"><div class="win-bar"><i></i><i></i><i></i><span data-en="Dashboard">Paneli</span></div><img src="img/dashboard@2x.jpg" alt="Paneli: shitjet e sotme, të ardhurat e 7 ditëve, mënyrat e pagesës, produktet më të shitura" data-en-alt="Dashboard: today's sales, revenue of the last 7 days, payment methods, best sellers" loading="lazy" width="2560" height="1440"></div>
+      <div class="text"><div class="eyebrow" data-en="Dashboard">Paneli</div><h3 data-en="Your day at a glance">Dita juaj me një shikim</h3><p data-en="What you sold today and yesterday, the last 7 days, cash or card, and your best sellers. It warns you about low stock and goods that expire.">Sa keni shitur sot dhe dje, të ardhurat e 7 ditëve, para në dorë ose kartelë, dhe produktet që shiten më shumë. Programi ju paralajmëron për stokun e ulët dhe për mallin që skadon.</p></div>
+    </div>
+    <div class="stop flip">
+      <div class="win"><div class="win-bar"><i></i><i></i><i></i><span data-en="Products &amp; stock">Produktet &amp; stoku</span></div><img src="img/products@2x.jpg" alt="Lista e produkteve me barkod, çmim, kosto, TVSH, stok dhe furnitor" data-en-alt="The product list with barcode, price, cost, VAT, stock and supplier" loading="lazy" width="2560" height="1440"></div>
+      <div class="text"><div class="eyebrow" data-en="Products">Produktet</div><h3 data-en="Prices and stock, always right">Çmimet dhe stoku, gjithmonë të sakta</h3><p data-en="Barcode, price, cost, VAT and stock for every product. Change many prices at once, print labels and import your list from Excel.">Barkodi, çmimi, kostoja, TVSH-ja dhe stoku për çdo produkt. Ndryshoni çmimet për shumë produkte njëherësh, printoni etiketa dhe importoni listën nga Excel.</p></div>
+    </div>
+    <div class="stop">
+      <div class="win"><div class="win-bar"><i></i><i></i><i></i><span data-en="Reports">Raportet</span></div><img src="img/reports@2x.jpg" alt="Raportet: të ardhurat, numri i shitjeve, fitimi bruto dhe kthimet" data-en-alt="Reports: revenue, number of sales, gross profit and returns" loading="lazy" width="2560" height="860"></div>
+      <div class="text"><div class="eyebrow" data-en="Reports">Raportet</div><h3 data-en="For you and your accountant">Për ju dhe për kontabilistin</h3><p data-en="Revenue, profit, VAT and debts for any period. The monthly report for your accountant comes ready in Excel or PDF, or goes out by email.">Të ardhurat, fitimi, TVSH-ja dhe borxhet për çdo periudhë. Raporti mujor për kontabilistin del gati në Excel ose PDF, ose dërgohet me email.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="types">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow" data-en="For every kind of shop">Për çdo lloj dyqani</div>
+      <h2 data-en="Choose your kind of shop, the program shows only what you need">Zgjidhni llojin e dyqanit, programi tregon vetëm atë që ju duhet</h2>
+    </div>
+    <div class="chips">
+      <div class="chip"><h3 data-en="Grocery / mini-market">Market / ushqimore</h3><p data-en="Sale by weight, scale barcodes, expiry dates, packs with their own barcode.">Shitje me peshë, barkod i peshores, data e skadimit, pako me barkodin e vet.</p></div>
+      <div class="chip"><h3 data-en="Clothes and shoes">Rroba dhe këpucë</h3><p data-en="Sizes and colours, each with its own stock.">Madhësitë dhe ngjyrat, secila me stokun e vet.</p></div>
+      <div class="chip"><h3 data-en="Phones and electronics">Telefona dhe elektronikë</h3><p data-en="IMEI and serial numbers, warranty, wholesale prices.">IMEI dhe numri serik, garancia, çmimet me shumicë.</p></div>
+      <div class="chip"><h3 data-en="Repair service">Servis / riparime</h3><p data-en="Devices in repair, their status, and payment on pickup.">Pajisjet në riparim, statusi dhe pagesa kur merren.</p></div>
+      <div class="chip"><h3 data-en="Building materials">Material ndërtimi</h3><p data-en="Metres, kilograms, litres and wholesale prices.">Metra, kilogramë, litra dhe çmime me shumicë.</p></div>
+      <div class="chip"><h3 data-en="Cosmetics">Kozmetikë</h3><p data-en="Expiry dates and packs, promotions and gift vouchers.">Data e skadimit dhe pako, aksione dhe kupona dhuratë.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="hapat">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow" data-en="How to start">Si fillohet</div>
+      <h2 data-en="From the first message to your first sale">Nga mesazhi i parë deri te shitja e parë</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><h3 data-en="Message us">Na shkruani</h3><p data-en="A WhatsApp message with your kind of shop is enough.">Mjafton një mesazh në WhatsApp me llojin e dyqanit tuaj.</p></div>
+      <div class="step"><h3 data-en="We install it together">E instalojmë bashkë</h3><p data-en="On your computer, in your shop or remotely. We bring in your products from Excel.">Në kompjuterin tuaj, në dyqan ose në distancë. Produktet i sjellim nga Excel.</p></div>
+      <div class="step"><h3 data-en="30 days free">30 ditë falas</h3><p data-en="Sell with it for a month. You pay nothing during the trial.">Shitni me të një muaj. Gjatë provës nuk paguani asgjë.</p></div>
+      <div class="step"><h3 data-en="You decide">Ju vendosni</h3><p data-en="If you like it, you get the license key and keep all your data. If not, you owe nothing.">Nëse ju pëlqen, merrni çelësin e licencës dhe të dhënat mbeten. Nëse jo, nuk keni asnjë detyrim.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="cmimet" style="padding-top:8px">
+  <div class="wrap pricing">
+    <div>
+      <div class="eyebrow" data-en="Prices">Çmimet</div>
+      <h2 style="margin-top:12px" data-en="Pay once, the program is yours">Një pagesë, programi është i juaji</h2>
+      <p style="color:var(--muted);margin-top:14px;font-size:1.1rem" data-en="No required subscription. After the first year, support and updates are optional.">Pa abonim të detyrueshëm. Pas vitit të parë, mbështetja dhe përditësimet janë me dëshirë.</p>
+      <ul>
+        <li data-en="Installation and training for your cashiers included">Instalimi dhe mësimi i arkëtarëve përfshihen</li>
+        <li data-en="New updates arrive by themselves, with one click">Përditësimet e reja vijnë vetë, me një klik</li>
+        <li data-en="Help on WhatsApp and remote help on your screen">Ndihmë me WhatsApp dhe në distancë në ekranin tuaj</li>
+        <li data-en="Automatic backups, also to a USB stick or OneDrive">Kopje rezervë automatike, edhe në USB ose OneDrive</li>
+        <li data-en="30-day free trial with every feature">Provë falas 30 ditë, me të gjitha funksionet</li>
+      </ul>
+    </div>
+    <div class="receipt" aria-label="Lista e çmimeve" data-en-label="Price list">
+      <div class="c big">STOREPOS</div>
+      <div class="c sub" data-en="Price list · 2026">Lista e çmimeve · 2026</div>
+      <hr>
+      <div class="row"><span data-en="License, 1 till">Licenca, 1 arkë</span><span>299.00 €</span></div>
+      <div class="sub" data-en="once, forever">një herë, përgjithmonë</div>
+      <div class="row" style="margin-top:6px"><span data-en="Support, year 1">Mbështetje vit 1</span><span>0.00 €</span></div>
+      <div class="sub" data-en="included">e përfshirë</div>
+      <div class="row" style="margin-top:6px"><span data-en="Support from year 2">Mbështetje nga viti 2</span><span>79.00 €</span></div>
+      <div class="sub" data-en="per year, optional">në vit, me dëshirë</div>
+      <hr>
+      <div class="row"><span data-en="Or monthly">Ose me muaj</span><span>19.00 €</span></div>
+      <div class="sub" data-en="per month, with support">në muaj, me mbështetje</div>
+      <hr>
+      <div class="row"><span data-en="OPENING OFFER">OFERTA E HAPJES</span><span></span></div>
+      <div class="sub" data-en="first 10 shops">10 dyqanet e para</div>
+      <div class="row"><span class="strike" data-en="License">Licenca</span><span class="strike">299.00 €</span></div>
+      <div class="row total"><span data-en="TOTAL">TOTALI</span><span>149.00 €</span></div>
+      <hr>
+      <div class="c sub" data-en="Devices (printer, scanner, scale)<br>are not included.">Pajisjet (printeri, skaneri, peshorja)<br>nuk përfshihen.</div>
+      <div class="c" style="margin-top:10px" data-en="Thank you!">Faleminderit!</div>
+    </div>
+  </div>
+</section>
+
+<section id="pyetje" style="padding-top:16px">
+  <div class="wrap">
+    <div class="head"><div class="eyebrow" data-en="Questions">Pyetje</div><h2 data-en="The questions we hear most">Pyetjet që na bëhen më shpesh</h2></div>
+    <div class="faq">
+      <details open><summary data-en="Does it work without internet?">A punon pa internet?</summary><p data-en="Yes. StorePOS runs on the shop's computer. Internet is only needed for email, WhatsApp and updates.">Po. StorePOS punon në kompjuterin e dyqanit. Interneti duhet vetëm për email, WhatsApp dhe përditësime.</p></details>
+      <details><summary data-en="What computer do I need?">Çfarë kompjuteri më duhet?</summary><p data-en="Any computer or tablet with Windows 10 or 11. It also works on small 1024 × 768 till screens.">Çdo kompjuter ose tablet me Windows 10 ose 11. Punon edhe në ekranet e vogla të arkave 1024 × 768.</p></details>
+      <details><summary data-en="Does it work with the fiscal device?">A punon me arkën fiskale?</summary><p data-en="The connection to certified fiscal devices is being prepared. Until then StorePOS can be used for stock, reports and sales next to the fiscal device you have. Ask us about your country.">Lidhja me pajisjen fiskale të certifikuar është në përgatitje. Deri atëherë StorePOS mund të përdoret për stokun, raportet dhe shitjet, krahas arkës fiskale që keni. Na pyetni për vendin tuaj.</p></details>
+      <details><summary data-en="How do I pay?">Si paguhet?</summary><p data-en="After the free month, by bank transfer or in cash when we meet. You get an invoice and your license key right away.">Pas muajit falas, me transfer bankar ose me para në dorë kur takohemi. Merrni faturën dhe çelësin e licencës menjëherë.</p></details>
+      <details><summary data-en="What if I don't like it?">Çka nëse nuk më pëlqen?</summary><p data-en="Then you don't buy it. The trial is free and without obligation, and your products stay yours in Excel.">Atëherë nuk e blini. Prova është falas dhe pa detyrim, dhe produktet tuaja mbeten tuajat në Excel.</p></details>
+      <details><summary data-en="What happens if the computer breaks?">Çka ndodh nëse prishet kompjuteri?</summary><p data-en="The program makes a backup every day, also to a USB stick or OneDrive. On the new computer you bring your data back with one click.">Programi bën kopje rezervë çdo ditë, edhe në USB ose OneDrive. Në kompjuterin e ri i ktheni të dhënat me një klik.</p></details>
+      <details><summary data-en="Can I bring my products from Excel?">A mund t'i sjell produktet nga Excel?</summary><p data-en="Yes. Products, prices and stock are imported from an Excel file.">Po. Produktet, çmimet dhe stoku importohen nga një skedar Excel.</p></details>
+      <details><summary data-en="Which languages?">Në cilat gjuhë është?</summary><p data-en="Albanian, Macedonian and English. Each user can choose their own language.">Shqip, maqedonisht dhe anglisht. Çdo përdorues mund ta zgjedhë gjuhën e vet.</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="kontakt" style="padding-top:16px">
+  <div class="wrap">
+    <div class="contact">
+      <div>
+        <h2 data-en="Try it in your own shop">Ejani ta provoni në dyqanin tuaj</h2>
+        <p data-en="Message us on WhatsApp. We install it together, show you how it works, and you try it free for 30 days.">Na shkruani në WhatsApp. E instalojmë bashkë, ju tregojmë si punon dhe e provoni 30 ditë falas.</p>
+      </div>
+      <div class="lines">
+        <div class="line"><div><small data-en="WhatsApp / phone · Ibish Selmani">WhatsApp / telefon · Ibish Selmani</small><b id="phone">+49 176 62916572</b></div><button type="button" data-copy="phone" data-en="Copy">Kopjo</button></div>
+        <div class="line"><div><small>Email</small><b id="mail">ibish.s@live.com</b></div><button type="button" data-copy="mail" data-en="Copy">Kopjo</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer><span>© 2026 StorePOS · Ibish Selmani</span><span>Windows 10 / 11 · shqip · македонски · English</span></footer>
+</div>
+
+<script>
+(function () {
+  var TEXT = { copy: { sq: "Kopjo", en: "Copy" }, copied: { sq: "U kopjua", en: "Copied" },
+               title: { sq: "StorePOS për dyqanin tuaj", en: "StorePOS for your shop" } };
+  var current = "sq";
+  var items = document.querySelectorAll("[data-en]");
+  items.forEach(function (el) { el.dataset.sq = el.innerHTML; });
+  document.querySelectorAll("[data-en-alt]").forEach(function (el) { el.dataset.sqAlt = el.alt; });
+  document.querySelectorAll("[data-en-label]").forEach(function (el) { el.dataset.sqLabel = el.getAttribute("aria-label"); });
+
+  function setLanguage(lang) {
+    if (lang !== "en") lang = "sq";
+    current = lang;
+    document.documentElement.lang = lang;
+    document.title = TEXT.title[lang];
+    items.forEach(function (el) { el.innerHTML = lang === "en" ? el.dataset.en : el.dataset.sq; });
+    document.querySelectorAll("[data-en-alt]").forEach(function (el) { el.alt = lang === "en" ? el.dataset.enAlt : el.dataset.sqAlt; });
+    document.querySelectorAll("[data-en-label]").forEach(function (el) { el.setAttribute("aria-label", lang === "en" ? el.dataset.enLabel : el.dataset.sqLabel); });
+    document.querySelectorAll(".lang button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.lang === lang)); });
+    var film = document.getElementById("film");
+    var src = film.dataset["src" + (lang === "en" ? "En" : "Sq")];
+    if (film.querySelector("source").getAttribute("src") !== src) {
+      film.pause();
+      film.querySelector("source").setAttribute("src", src);
+      film.poster = film.dataset["poster" + (lang === "en" ? "En" : "Sq")];
+      film.load();
+    }
+    try { localStorage.setItem("storepos-lang", lang); } catch (e) {}
+  }
+
+  document.querySelectorAll(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () { setLanguage(b.dataset.lang); });
+  });
+  var start = location.hash === "#en" ? "en" : null;
+  if (!start) { try { start = localStorage.getItem("storepos-lang"); } catch (e) {} }
+  if (start === "en") setLanguage("en");
+
+  document.querySelectorAll("[data-copy]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var el = document.getElementById(button.dataset.copy);
+      var done = function () {
+        button.textContent = TEXT.copied[current];
+        setTimeout(function () { button.textContent = TEXT.copy[current]; }, 1600);
+      };
+      var select = function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+      try { navigator.clipboard.writeText(el.textContent).then(done, select); } catch (e) { select(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
